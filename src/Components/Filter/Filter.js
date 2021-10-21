@@ -1,20 +1,21 @@
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { filter } from '../../Store/filterSlice';
+import { getFilter } from '../../Selectors/contacts-selectors';
 import { Wrapper, Label, Input } from './Filter.styled';
-import { filterContact } from '../../Store/actions';
 
-const Filter = ({ value, onChange }) => (
-  <Wrapper>
-    <Label htmlFor="filter">Find contacts by name</Label>
-    <Input type="text" name="filter" value={value} onChange={onChange} />
-  </Wrapper>
-);
+function Filter() {
+  const dispatch = useDispatch();
+  const value = useSelector((state) => getFilter(state));
+  const onChange = (e) => {
+    dispatch(filter(e.target.value));
+  }
 
-const mapStateToProps = state => ({
-  value: state.contacts.filter,
-});
+  return (
+    <Wrapper>
+      <Label htmlFor="filter">Find contacts by name</Label>
+      <Input type="text" name="filter" value={value} onChange={onChange} />
+    </Wrapper>
+  );
+}
 
-const mapDispatchToProps = dispatch => ({
-  onChange: e => dispatch(filterContact(e.target.value)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Filter);
+export default Filter;

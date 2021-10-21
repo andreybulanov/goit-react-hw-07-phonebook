@@ -1,40 +1,32 @@
-import { connect } from 'react-redux';
-import { removeContact } from '../../Store/actions';
+import { useSelector } from 'react-redux';
+import { useFetchContactsQuery, useDeleteContactMutation } from '../../Store/contactsSlice';
+import { getFilter } from '../../Selectors/contacts-selectors';
 import { List, ListItem } from './ContactsList.styled';
 import { Button } from '../Buttons/Buttons.styled';
 
-function ContactsList({ contacts, deleteId }) {
+function ContactsList() {
+  const { data: contactList } = useFetchContactsQuery();
+  const [deleteContact] = useDeleteContactMutation();
+  const filterValue = useSelector((state) => getFilter(state));
+   const contacts = contactList?.filter((contact) =>
+    contact.name.toLowerCase().includes(filterValue)
+  );
+
   return (
     <div>
       <List>
-        {contacts.map(contact => {
-          const { id, name, number } = contact;
-          return (
-            <ListItem key={id}>
+        {contactList && contacts.map(({ id, name, number }) => (
+          <ListItem key={id}>
               {name} - {number}{' '}
-              <Button type="button" onClick={() => deleteId(id)}>
+              <Button type="button" onClick={() => deleteContact(id)}>
                 Delete
               </Button>
             </ListItem>
-          );
-        })}
+        )
+        )}
       </List>
     </div>
   );
 }
 
-const nameFilter = state => {
-  return state.contacts.items.filter(contact =>
-    contact.name.toLowerCase().includes(state.contacts.filter.toLowerCase()),
-  );
-};
-
-const mapStateToProps = state => ({
-  contacts: nameFilter(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  deleteId: id => dispatch(removeContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
+export default ContactsList;

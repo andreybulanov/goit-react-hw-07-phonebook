@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { connect } from 'react-redux';
-import { addContact } from '../../Store/actions';
+import { useCreateContactMutation, useFetchContactsQuery } from '../../Store/contactsSlice';
+
 import { Form, Label, Input } from './ContactsForm.styled';
 import { Button } from '../Buttons/Buttons.styled';
 import toast, { Toaster } from 'react-hot-toast';
@@ -9,12 +8,10 @@ import toast, { Toaster } from 'react-hot-toast';
 function ContactsForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = state => state.contacts.items;
+  const [createContact] = useCreateContactMutation();
+  const {data: contacts} = useFetchContactsQuery();
 
-  const stateContact = useSelector(contacts);
-  const dispatch = useDispatch();
-
-  const handleChange = e => {
+  const handleChange = (e) => {
     switch (e.target.name) {
       case 'name':
         setName(e.target.value);
@@ -27,27 +24,19 @@ function ContactsForm() {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    newContact();
-    setName('');
-    setNumber('');
-  };
-
-  const newContact = () => {
-    const contactToAdd = {
-      name,
-      number,
-    };
-    stateContact.some(
-      contact => contact.name.toLowerCase() === contactToAdd.name.toLowerCase(),
-    )
-      ? notification(contactToAdd.name)
-      : dispatch(addContact(contactToAdd));
-  };
-
-  const notification = name =>
+    // checkContact();
+    // setName('');
+    // setNumber('');
+  
+  const checkContact = contacts.find(
+    (contact) => contact.name.toLowerCase() === name.toLowerCase()
+  );
+  if (checkContact) {
+    // alert(`${name} is already in contacts`
+    // notification = (name) =>
     toast(`${name} is already in contacts`, {
       icon: '👏',
       style: {
@@ -57,6 +46,38 @@ function ContactsForm() {
         duration: 4000,
       },
     });
+    // setName("");
+    // setNumber("");
+    return;
+    };
+    
+    createContact({ name, number });
+    setName("");
+    setNumber("");
+  };
+
+  // const newContact = () => {
+  //   const contactToAdd = {
+  //     name,
+  //     number,
+  //   };
+  //   stateContact.some(
+  //     contact => contact.name.toLowerCase() === contactToAdd.name.toLowerCase(),
+  //   )
+  //     ? notification(contactToAdd.name)
+  //     : dispatch(addContact(contactToAdd));
+  // };
+
+  // const notification = (name) =>
+  //   toast(`${name} is already in contacts`, {
+  //     icon: '👏',
+  //     style: {
+  //       borderRadius: '10px',
+  //       background: '#333',
+  //       color: '#fff',
+  //       duration: 4000,
+  //     },
+  //   });
 
   return (
     <>
@@ -88,12 +109,12 @@ function ContactsForm() {
   );
 }
 
-const mapStateToProps = state => ({
-  contacts: state.contacts.item,
-});
+// const mapStateToProps = state => ({
+//   contacts: state.contacts.item,
+// });
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: data => dispatch(addContact(data)),
-});
+// const mapDispatchToProps = dispatch => ({
+//   onSubmit: data => dispatch(addContact(data)),
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactsForm);
+export default ContactsForm;
