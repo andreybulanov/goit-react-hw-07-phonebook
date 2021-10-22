@@ -26,58 +26,27 @@ function ContactsForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // checkContact();
-    // setName('');
-    // setNumber('');
   
-  const checkContact = contacts.find(
-    (contact) => contact.name.toLowerCase() === name.toLowerCase()
-  );
-  if (checkContact) {
-    // alert(`${name} is already in contacts`
-    // notification = (name) =>
-    toast(`${name} is already in contacts`, {
-      icon: '👏',
-      style: {
-        borderRadius: '10px',
-        background: '#333',
-        color: '#fff',
-        duration: 4000,
-      },
-    });
-    // setName("");
-    // setNumber("");
-    return;
+    const checkContact = contacts.find(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    if (checkContact) {
+      toast(`${name} is already in contacts`, {
+        icon: '👏',
+        style: {
+          borderRadius: '10px',
+          background: '#333',
+          color: '#fff',
+          duration: 4000,
+        },
+      });
+      return;
     };
     
     createContact({ name, number });
     setName("");
     setNumber("");
   };
-
-  // const newContact = () => {
-  //   const contactToAdd = {
-  //     name,
-  //     number,
-  //   };
-  //   stateContact.some(
-  //     contact => contact.name.toLowerCase() === contactToAdd.name.toLowerCase(),
-  //   )
-  //     ? notification(contactToAdd.name)
-  //     : dispatch(addContact(contactToAdd));
-  // };
-
-  // const notification = (name) =>
-  //   toast(`${name} is already in contacts`, {
-  //     icon: '👏',
-  //     style: {
-  //       borderRadius: '10px',
-  //       background: '#333',
-  //       color: '#fff',
-  //       duration: 4000,
-  //     },
-  //   });
 
   return (
     <>
@@ -108,13 +77,5 @@ function ContactsForm() {
     </>
   );
 }
-
-// const mapStateToProps = state => ({
-//   contacts: state.contacts.item,
-// });
-
-// const mapDispatchToProps = dispatch => ({
-//   onSubmit: data => dispatch(addContact(data)),
-// });
 
 export default ContactsForm;
