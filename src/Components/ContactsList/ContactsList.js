@@ -13,7 +13,7 @@ function ContactsList() {
   return (
     <div>
       <List>
-        {contacts.map(({ id, name, number }) => (
+        {contacts.map(({ id, name, number, phone}) => (
           <ListItem key={id}>
               {name} - {number}{' '}
               <Button type="button" onClick={() => deleteContact(id)}>
