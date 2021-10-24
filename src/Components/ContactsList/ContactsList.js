@@ -6,7 +6,7 @@ import {
 
 import { List, ListItem } from './ContactsList.styled';
 import { Button } from '../Buttons/Buttons.styled';
-import Filter from 'Components/Filter/Filter';
+import Filter from '../Filter/Filter';
 
 function ContactsList() {
   const [contacts, setContacts] = useState([]);
